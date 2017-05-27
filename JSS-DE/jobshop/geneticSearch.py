@@ -168,4 +168,6 @@ def geneticSearchTemplate(jobs, recombine, mutate=mutate_permuteSubsequence, sel
         #     print(solutions[-1][1])
         #     print("Found in {:} generations in {:.1f}s".format(totalGenerations, time.time() - t0))
         #
-    return solutions[-1]
+    solutionGen = normalizeSchedule(jobs,solutions[0][1])
+    solutionCost = solutions[0][0]
+    return (solutionCost, solutionGen)

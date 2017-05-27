@@ -21,6 +21,7 @@ if __name__ == '__main__':
     recombine = geneticSearch.recombine_simpleCrossover
     mutate = partial(geneticSearch.mutate_permuteSubsequence, max_shuffle_fraction=8)
     cost, solution = geneticSearchTemplate(jobs, select=select, recombine=recombine, mutate=mutate, maxTime=20)
+
     printSchedule(jobs, solution)
     print('===============================')
     prettyPrintSchedule(jobs, solution)
