@@ -1,5 +1,5 @@
 from jobshop import *
-from jobshop import geneticSearch
+from jobshop import differentialEvolution
 
 from functools import partial
 import optparse
@@ -17,10 +17,7 @@ if __name__ == '__main__':
     print("Number of jobs:", j)
     printJobs(jobs)
     random.seed(1)
-    select = geneticSearch.select_best
-    recombine = geneticSearch.recombine_simpleCrossover
-    mutate = partial(geneticSearch.mutate_permuteSubsequence, max_shuffle_fraction=8)
-    cost, solution = geneticSearchTemplate(jobs, select=select, recombine=recombine, mutate=mutate, maxTime=20)
+    cost, solution = differentialEvolution.engine(jobs)
 
     printSchedule(jobs, solution)
     print('===============================')
