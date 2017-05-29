@@ -1,11 +1,3 @@
-from jobshop import *
-from jobshop import differentialEvolution
-
-from functools import partial
-import optparse
-import random
-
-import random
 
 w = 0.729844  # Inertia weight to prevent velocities becoming too large
 c1 = 1.496180  # Scaling co-efficient on the social component
@@ -108,18 +100,3 @@ class ParticleSwarmOptimizer:
     def f(self, solution):
         return cost(self.jobs, solution)
 
-
-def main():
-    filePath = 'instances/vorlesungsbeispiel'
-    jobs = readJobs(filePath)
-    m = len(jobs[0])
-    j = len(jobs)
-    mask = makeMask(jobs)
-    pso = ParticleSwarmOptimizer(j*m,mask,jobs)
-    solution = pso.optimize()
-    #solutionOpRep = converterVectorToOperation(solution,mask)
-    #cost(jobs,solutionOpRep)
-    print('a')
-
-if __name__ == '__main__':
-    main()
