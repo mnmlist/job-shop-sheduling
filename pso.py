@@ -1,3 +1,5 @@
+import jobshop
+import random
 
 w = 0.729844  # Inertia weight to prevent velocities becoming too large
 c1 = 1.496180  # Scaling co-efficient on the social component
@@ -27,10 +29,10 @@ class Particle:
         return
 
     def updatePosRep(self):
-        self.posRep = converterVectorToOperation(self.pos, self.mask)
+        self.posRep = jobshop.converterVectorToOperation(self.pos, self.mask)
 
     def updatePosBestRep(self):
-        self.posBestRep = converterVectorToOperation(self.pos, self.mask)
+        self.posBestRep = jobshop.converterVectorToOperation(self.pos, self.mask)
 
     def updatePositions(self):
         for i in range(self.dimension):
@@ -47,7 +49,7 @@ class Particle:
         return
 
     def updateCost(self):
-        self.cost = cost(self.jobs, self.posRep)
+        self.cost = jobshop.cost(self.jobs, self.posRep)
 
     def satisfyConstraints(self):
         # This is where constraints are satisfied

@@ -337,3 +337,19 @@ def shuffle(x, start=0, stop=None):
         j = random.randint(start, i)
         x[i], x[j] = x[j], x[i]
 
+
+def makeMask(jobs):
+    mask = [0]*len(jobs)*len(jobs[0])
+    ij = [0]*len(jobs)
+    for i in range(len(jobs)):
+        for j in range(len(jobs[0])):
+            mask[i*len(jobs[0])+j]=jobs[i][j][0]
+    mask.sort()
+    return mask
+
+def converterVectorToOperation(schedule,mask):
+    new_schedule = list(zip(schedule,mask))
+    new_schedule.sort()
+    return [i[1] for i in new_schedule]
+
+
