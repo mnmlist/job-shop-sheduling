@@ -5,8 +5,8 @@ w = 0.729844  # Inertia weight to prevent velocities becoming too large
 c1 = 1.496180  # Scaling co-efficient on the social component
 c2 = 1.496180  # Scaling co-efficient on the cognitive component
 dimension = 20  # Size of the problem
-iterations = 3000
-swarmSize = 30
+iterations = 3000 # Number of itterations
+swarmSize = 30 # Size of the swarm
 
 
 # This class contains the code of the Particles in the swarm
@@ -14,8 +14,8 @@ class Particle:
     def __init__(self,dimension, mask, jobs):
         self.velocity = []
         self.pos = []
-        self.posBest = []
-        self.posRep = []
+        self.posBest = [] # store best position for particle
+        self.posRep = [] # store vector representation in schedule
         self.dimension = dimension
         self.jobs = jobs
         self.mask = mask
@@ -29,17 +29,29 @@ class Particle:
         return
 
     def updatePosRep(self):
+        """
+        update position representation
+        """
         self.posRep = jobshop.converterVectorToOperation(self.pos, self.mask)
 
     def updatePosBestRep(self):
+        """
+        update best position representation
+        """
         self.posBestRep = jobshop.converterVectorToOperation(self.pos, self.mask)
 
     def updatePositions(self):
+        """
+        update position
+        """
         for i in range(self.dimension):
             self.pos[i] = self.pos[i] + self.velocity[i]
         return
 
     def updateVelocities(self, gBest):
+        """
+        update velocity
+        """
         for i in range(self.dimension):
             r1 = random.random()
             r2 = random.random()
@@ -49,11 +61,10 @@ class Particle:
         return
 
     def updateCost(self):
+        """
+        update cost
+        """
         self.cost = jobshop.cost(self.jobs, self.posRep)
-
-    def satisfyConstraints(self):
-        # This is where constraints are satisfied
-        return
 
 
 # This class contains the particle swarm optimization algorithm
@@ -73,7 +84,6 @@ class ParticleSwarmOptimizer:
             print("iteration ", i)
 
             # Get the global best particle
-            # todo set best from last representation
             gBest = self.swarm[0]
             for j in range(swarmSize):
                 tempParticle = self.swarm[j]
@@ -100,5 +110,5 @@ class ParticleSwarmOptimizer:
         return solution
 
     def f(self, solution):
-        return cost(self.jobs, solution)
+        return jobshop.cost(self.jobs, solution)
 

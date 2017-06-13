@@ -1,5 +1,4 @@
 from functools import partial
-import optparse
 import random
 import jobshop
 import pso
@@ -9,7 +8,7 @@ import ga
 
 if __name__ == '__main__':
 
-    filePath = 'instances/20'
+    filePath = 'instances/3'
     jobs = jobshop.readJobs(filePath)
     m = len(jobs[0])
     j = len(jobs)
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     select = ga.select_best
     recombine = ga.recombine_simpleCrossover
     mutate = partial(ga.mutate_permuteSubsequence, max_shuffle_fraction=8)
-    cost, solution = ga.engine(jobs, select=select, recombine=recombine, mutate=mutate, maxTime=260)
+    cost, solution = ga.engine(jobs, select=select, recombine=recombine, mutate=mutate, maxTime=20)
     jobshop.printSchedule(jobs, solution)
     print('==============GENETIC ALGORITHM=================')
     jobshop.prettyPrintSchedule(jobs, solution)
@@ -33,21 +32,21 @@ if __name__ == '__main__':
 
 
     # DIFFERENTIAL EVOLUTION
-    # cost, solution = de.engine(jobs)
-    # jobshop.printSchedule(jobs, solution)
-    # print('===============DIFFERENTIAL EVOLUTION================')
-    # jobshop.prettyPrintSchedule(jobs, solution)
-    # print('===============================')
+    cost, solution = de.engine(jobs)
+    jobshop.printSchedule(jobs, solution)
+    print('===============DIFFERENTIAL EVOLUTION================')
+    jobshop.prettyPrintSchedule(jobs, solution)
+    print('===============================')
 
     # PSO
-    # mask = jobshop.makeMask(jobs)
-    # pso = pso.ParticleSwarmOptimizer(j * m, mask, jobs)
-    # solution = pso.optimize()
-    # jobshop.printSchedule(jobs, solution.posRep)
-    # print('===============PSO================')
-    # jobshop.prettyPrintSchedule(jobs, solution.posRep)
-    # print('===============================')
+    mask = jobshop.makeMask(jobs)
+    pso = pso.ParticleSwarmOptimizer(j * m, mask, jobs)
+    solution = pso.optimize()
+    jobshop.printSchedule(jobs, solution.posRep)
+    print('===============PSO================')
+    jobshop.prettyPrintSchedule(jobs, solution.posRep)
+    print('===============================')
 
 
-    # # a solution for vorlesungsbeispiel
-    # prettyPrintSchedule(jobs, [0, 0, 1, 2, 1, 1, 2, 2, 0])
+    # a solution for vorlesungsbeispiel
+    prettyPrintSchedule(jobs, [0, 0, 1, 2, 1, 1, 2, 2, 0])

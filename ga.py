@@ -10,39 +10,18 @@ def select_best(jobs, population, fraction=0.5):
     # select best half
     return population[:max(int(fraction * len(population)), 1)]
 
-def select_richard(jobs, population, dividend=5):
-    # richard selection: partition population and keep best of fraction of group
-    nextGen = []
-    counter = 0
-    while counter < len(population):
-        nextOffset = random.randint(2, int(len(population)/dividend))
-        subPopulation = population[counter:counter+nextOffset]
-        nextGen.extend(select_best(jobs, subPopulation))
-        counter += nextOffset
-    return nextGen
-
-def select_stochastic(jobs, population):
-    # stochastic selection
-    # better solutions have greater chance to stay but may also be killed
-    population = sorted(population)
-    nextGen = []
-    populationSize = len(population)
-    while nextGen == []:
-        for i in range(populationSize):
-            randomNumber = random.randint(0,populationSize)
-            if i < randomNumber:
-                nextGen.append(population[i])
-            else:
-                pass
-    return nextGen
 
 def recombine_simpleCrossover(jobs, s1, s2):
-    # Recombine with classic crossover
+    """
+     Recombine with classic crossover
+    """
     cut = random.randint(0, len(s1) - 1)
     return jobshop.normalizeSchedule(jobs, s1[:cut] + s2[cut:])
 
 def mutate_permuteSubsequence(jobs, s, max_shuffle_fraction=4):
-    # Mutate by random.shuffling a subsequence of a schedule.
+    """
+    Mutate by random.shuffling a subsequence of a schedule.
+    """
     a, b = sorted([random.randint(0, len(s) - 1), random.randint(0, len(s) - 1)])
 
     # The mutation should not be too large.
@@ -54,13 +33,6 @@ def mutate_permuteSubsequence(jobs, s, max_shuffle_fraction=4):
     jobshop.shuffle(s, a, b)
 
 
-def mutate_swap(jobs, s, num_swaps=5):
-    # Mutate by swapping two instructions.
-    for swap in range(num_swaps):
-        a = random.randint(0, len(s) - 1)
-        b = random.randint(0, len(s) - 1)
-        s[a], s[b] = s[b], s[a]
-
 
 def engine(jobs, recombine, mutate=mutate_permuteSubsequence, select=select_best,
         populationSize=100, maxTime=None):
@@ -68,7 +40,7 @@ def engine(jobs, recombine, mutate=mutate_permuteSubsequence, select=select_best
 
     numGenerations = 10   # generations calculated between logging
     solutions = []   # list of (time, schedule) with decreasing time
-    best = 10000000  # TODO set initial value for max of add check in loop
+    best = 10000000
 
     t0 = time.time()
     totalGenerations = 0
@@ -81,9 +53,6 @@ def engine(jobs, recombine, mutate=mutate_permuteSubsequence, select=select_best
     schedules = [jobshop.randomSchedule(j, m) for i in range(populationSize)]
     fitness = [jobshop.cost(jobs, s) for s in schedules]
 
-    # TODO rethink datastructure for population
-    #   - using (cost, permutation) let us easily sort by cost
-    #   - but cost changes in every step and we jsut need to recalculate at the end
     population = list(zip(fitness, schedules))
 
     while True:
@@ -100,7 +69,6 @@ def engine(jobs, recombine, mutate=mutate_permuteSubsequence, select=select_best
                     next_generation.append(
                         recombine(jobs, random.choice(fittest)[1], random.choice(fittest)[1]))
 
-                # dummy value for cost
                 population = fittest + [(0, s) for s in next_generation]
 
                 # (3) mutation
